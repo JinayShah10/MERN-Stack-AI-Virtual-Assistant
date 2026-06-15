@@ -17,7 +17,7 @@ const SignUp = () => {
   const { serverUrl } = useContext(userDataContext);
 
   const handleSignUp = async (e) => {
-    e.preventDefault;
+    e.preventDefault();
     setError("");
     try {
       let result = await axios.post(`${serverUrl}/api/auth/signup`, { name, email, password }, { withCredentials: true });
@@ -47,7 +47,7 @@ const SignUp = () => {
           {showPassword && <IoEyeOff className='absolute top-4 right-5 text-[white] w-6.25 h-6.25 cursor-pointer' onClick={() => { setShowPassword(false) }} />}
         </div>
 
-        {error.length > 0 && <p className='text-red-500 text-[17px]'>*{err}</p>}
+        {error.length > 0 && <p className='text-red-500 text-[17px]'>*{error}</p>}
 
         <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400'>Sign Up</button>
 
