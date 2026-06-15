@@ -4,6 +4,7 @@ dotevn.config()
 import connectDB from "./config/db.js"
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
+import userRouter from "./routes/user.routes.js";
 import cors from "cors";
 
 const PORT = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ app.use(cors({
     credentials:true,
 }))
 app.use("/api/auth",authRouter);
+app.use("/api/user",userRouter);
 
 app.listen(PORT,(req,res)=>{
     connectDB();
