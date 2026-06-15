@@ -13,18 +13,22 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("")
+  const [loading,setLoading] = useState(false)
   const { serverUrl } = useContext(userDataContext);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
-      let result = await axios.post(`${serverUrl}/api/auth/signin`, {email, password }, { withCredentials: true });
+      let result = await axios.post(`${serverUrl}/api/auth/login`, {email, password }, { withCredentials: true });
       console.log(result);
+      setLoading(false)
     }
     catch (error) {
       console.log(error);
       setError(error.response.data.message)
+      setLoading(false)
     }
   }
   return (
@@ -46,7 +50,7 @@ const SignIn = () => {
 
         {error.length > 0 && <p className='text-red-500 text-[17px]'>*{error}</p>}
 
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400'>Sign In</button>
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400' disabled={loading} >{loading?"Loading..":"Sign In"}</button>
 
         <p className='text-[white] text-[18px] cursor-pointer' onClick={() => { navigate("/signup") }}>Don't have an account? <span className='text-blue-400'>Sign Up</span></p>
       </form>
