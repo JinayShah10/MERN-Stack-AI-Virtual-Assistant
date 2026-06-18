@@ -3,7 +3,7 @@ import bg from "../assets/authBg.png"
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 import { useState } from "react"
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { userDataContext } from '../context/UserContext';
 import axios from "axios";
 
@@ -15,7 +15,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("")
   const [loading,setLoading] = useState(false)
-  const { serverUrl } = useContext(userDataContext);
+  const { serverUrl, userData, setUserData } = useContext(userDataContext);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -23,11 +23,13 @@ const SignUp = () => {
     setLoading(true);
     try {
       let result = await axios.post(`${serverUrl}/api/auth/signup`, { name, email, password }, { withCredentials: true });
-      console.log(result);
+      setUserData(result.data);
       setLoading(false);
+      navigate("/customize")
     }
     catch (error) {
       console.log(error);
+      setUserData(null);
       setLoading(false);
       setError(error.response.data.message)
     }

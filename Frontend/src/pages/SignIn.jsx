@@ -14,7 +14,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const { serverUrl } = useContext(userDataContext);
+  const { serverUrl,userData, setUserData } = useContext(userDataContext);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -22,11 +22,14 @@ const SignIn = () => {
     setLoading(true);
     try {
       let result = await axios.post(`${serverUrl}/api/auth/login`, { email, password }, { withCredentials: true });
-      console.log(result);
+      console.log(result.data)
+      setUserData(result.data);
       setLoading(false)
+      navigate("/")
     }
     catch (error) {
       console.log(error);
+      setUserData(null);
       setError(error.response.data.message)
       setLoading(false)
     }

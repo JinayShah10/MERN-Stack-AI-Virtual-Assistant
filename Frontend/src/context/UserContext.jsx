@@ -5,11 +5,27 @@ export const userDataContext = createContext()
 
 const UserContext = ({ children }) => {
 
+  const [userData, setUserData] = useState(null);
+
+  const [frontendImage,setFrontendImage] = useState(null);
+  const [backendImage,setBackendImage] = useState(null);
+  const [selectedImage,setSelectedImage] = useState(null);
+
   const serverUrl = "http://localhost:8000"
 
   const value = {
-    serverUrl
+    serverUrl,
+    userData, 
+    setUserData,
+    frontendImage,
+    setFrontendImage,
+    backendImage,
+    setBackendImage,
+    selectedImage,
+    setSelectedImage,
   }
+
+  
 
   const handleCurrentUser = async () => {
     try {
@@ -25,8 +41,6 @@ const UserContext = ({ children }) => {
   useEffect(() => {
     handleCurrentUser()
   }, [])
-
-  const [userData, setUserData] = useState(null);
 
   return (
     <div>
