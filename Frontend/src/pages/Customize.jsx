@@ -9,6 +9,7 @@ import image5 from "../assets/image5.png"
 import image6 from "../assets/image6.jpeg"
 import image7 from "../assets/image7.jpeg"
 import { RiImageAddLine } from "react-icons/ri"
+import {MdKeyboardBackspace} from "react-icons/md";
 import { useRef } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
@@ -27,7 +28,9 @@ const Customize = () => {
     }
 
     return (
-        <div className='w-full h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col p-5'>
+        <div className='w-full h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col p-5 relative'>
+
+            <MdKeyboardBackspace className="absolute top-7.5 left-7.5 text-white w-8 h-8 cursor-pointer" onClick={()=>{navigate("/")}}/>
 
             <h1 className='text-white text-[30px] text-center font-semibold mb-10'>Select Your <span className=' text-blue-400 text-[30px] font-semibold'>AI Assistant's Image</span></h1>
 
