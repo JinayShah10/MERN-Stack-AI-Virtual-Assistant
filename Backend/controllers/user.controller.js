@@ -5,7 +5,7 @@ import moment from "moment"
 
 export const getCurrentUser = async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const userId = req.userId
         const user = await User.findById(userId).select("-password")
         if (!user) {
@@ -50,7 +50,7 @@ export const askToAssistant = async (req, res) => {
         const userName = user.name;
         const assistantName = user.assistantName;
 
-        const result = await geminiResponse(command, userName, assistantName);
+        const result = await geminiResponse(command, assistantName, userName);
 
         const jsonMatch = result.match(/{[\s\S]*}/);
         if (!jsonMatch) {
@@ -61,28 +61,28 @@ export const askToAssistant = async (req, res) => {
         const type = gemResult.type;
 
         switch (type) {
-            case 'get-date':
+            case 'get_date':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
                     respone: `Current Date is ${moment().format("DD-MM-YYYY")}`
                 });
 
-            case 'get-time':
+            case 'get_time':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
                     respone: `Current Time is ${moment().format("hh:mm A")}`
                 });
 
-            case 'get-day':
+            case 'get_day':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
                     respone: `Today is ${moment().format("dddd")}`
                 });
 
-            case 'get-month':
+            case 'get_month':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
@@ -102,12 +102,16 @@ export const askToAssistant = async (req, res) => {
                     userInput: gemResult.userInput,
                     response: gemResult.response,
                 });
-            
+
             default:
-                return res.status(400).json({response: "Sorry, I Didnt Understand That Command.!"})
+                return res.status(400).json({ response: "Sorry, I Didnt Understand That Command.!" })
         }
     }
     catch (error) {
-        return res.status(500).json({response: "ask assistant error"})
+        console.log("ASK ASSISTANT ERROR:", error);
+        return res.status(500).json({
+            response: "ask assistant error",
+            error: error.message
+        });
     }
 }
