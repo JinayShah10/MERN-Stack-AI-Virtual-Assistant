@@ -1,10 +1,19 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef, useState} from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
+import aiImg from "../assets/ai.gif"
+import userImg from "../assets/user.gif"
 
 const Home = () => {
   const { userData, serverUrl, setUserData, getGeminiResponse } = useContext(userDataContext)
   const navigate = useNavigate()
+  const [listening, setListening] = useState(false);
+  const [userText,setUserText] = useState(null)
+  const [aiText,setAiText] = useState(null)
+  const isSpeakingRef = useRef(false);
+  const recognitionRef = useRef(null);
+  const isRecognizingRef = useRef(false)
+  const synth = window.speechSynthesis
 
   const handleLogOut = async () => {
     try {
@@ -18,9 +27,73 @@ const Home = () => {
     }
   }
 
-  const speak = (text) =>{
+  const startRecognition = ()=>{
+    try{
+      recognitionRef.current?.start()
+      setListening(true)
+    }
+    catch(error){
+      if(!error.message.includes("start"))
+      {
+        console.log("Recognition Error",error)
+      }
+    }
+  }
+
+  const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(utterance);
+    utterance.lang = "hi-IN";
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(v=>v.lang === "hi-IN");
+    if(voice)
+    {
+      utterance.voice = voice;
+    }
+    isSpeakingRef.current=true;
+
+    utterance.onend= ()=>{
+      isSpeakingRef.current=false;
+      startRecognition();
+    }
+    synth.speak(utterance);
+  }
+
+  const handleCommand = async (data) => {
+    const { type, userInput, response } = data;
+    speak(response);
+
+
+    if (type === "google_search") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.google.com/search?q=${query}`, `_blank`);
+    }
+
+    if (type === "calculator_open") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.google.com/search?q=calculator`, `_blank`);
+    }
+
+    if (type === "instagram_open") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.instagram.com/`, `_blank`);
+    }
+
+    if (type === "facebook_open") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.facebook.com/`, `_blank`);
+    }
+
+    if (type === "weather_show") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.google.com/search?q=weather`, `_blank`);
+    }
+
+    if (type === "youtube_search" || type === "youtube_play") {
+      const query = encodeURIComponent(userInput);
+      window.open(`https://www.youtube.com/results?search_query=${query}`, `_blank`);
+    }
+
+
   }
 
   useEffect(() => {
@@ -28,19 +101,86 @@ const Home = () => {
 
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.lang = "en-US";
+    recognition.lang = "en-IN";
+
+    recognitionRef.current = recognition;
+
+    const safeRecognition = () => {
+      try {
+        if (!isSpeakingRef.current && !isRecognizingRef.current) {
+          recognition.start();
+        }
+      }
+      catch (error) {
+        if(error.name!="InvalidStateError"){
+          console.log("Strt Error",error);
+        }
+      }
+    }
+
+    recognition.onstart = ()=>{
+      isRecognizingRef.current=true;
+      setListening(true);
+    }
+
+    recognition.onend = ()=>{
+      setAiText("")
+      isRecognizingRef.current=false;
+      setListening(false);
+    }
+
+    if(!isSpeakingRef.current)
+    {
+      setTimeout(()=>{
+        safeRecognition()
+      },1000);
+    }
+
+    recognition.onerror = (event)=>{
+      console.warn("Recognition Error",event.error);
+      isRecognizingRef.current=false;
+      setListening(false);
+      if(event.error!='aborted' && !isSpeakingRef.current)
+      {
+        setTimeout(()=>{
+          safeRecognition()
+        },1000)
+      }
+    }
 
     recognition.onresult = async (e) => {
       const transcript = e.results[e.results.length - 1][0].transcript.trim();
       console.log(transcript);
 
-      if(transcript.toLowerCase().includes(userData.assistantName.toLowerCase())){
+      if (transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
+        setAiText("")
+        setUserText(transcript)
+        recognition.stop()
+        isRecognizingRef.current = false;
+        setListening(false);
         const data = await getGeminiResponse(transcript);
         console.log(data)
-        speak(data.response);
+        handleCommand(data)
+        setAiText(data.response)
+        setUserText("")
       }
     }
-    recognition.start();
+
+    const fallback = setInterval(()=>{
+      if(!isSpeakingRef.current && !isRecognizingRef.current)
+      {
+        safeRecognition();
+      }
+    },10000)
+
+    safeRecognition();
+
+    return ()=>{
+      recognition.stop();
+      setListening(false);
+      isRecognizingRef.current=false;
+      clearInterval(fallback)
+    }
 
   }, [])
 
@@ -56,6 +196,11 @@ const Home = () => {
       </div>
 
       <h1 className='text-white text-[30px] font-semibold'>{userData?.assistantName}</h1>
+
+      {!aiText && <img src={userImg} alt="" className='w-50'/>}
+      {aiText && <img src={aiImg} alt="" className='w-50'/>}
+
+      <h2 className='text-white text-[18px] font-semibold text-wrap'>{userText?userText:aiText?aiText:null}</h2>
 
     </div>
   )

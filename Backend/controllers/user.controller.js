@@ -47,6 +47,8 @@ export const askToAssistant = async (req, res) => {
     try {
         const { command } = req.body;
         const user = await User.findById(req.userId);
+        user.history.push(command);
+        user.save()
         const userName = user.name;
         const assistantName = user.assistantName;
 
@@ -65,28 +67,28 @@ export const askToAssistant = async (req, res) => {
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
-                    respone: `Current Date is ${moment().format("DD-MM-YYYY")}`
+                    response: `Current Date is ${moment().format("DD-MM-YYYY")}`
                 });
 
             case 'get_time':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
-                    respone: `Current Time is ${moment().format("hh:mm A")}`
+                    response: `Current Time is ${moment().format("hh:mm A")}`
                 });
 
             case 'get_day':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
-                    respone: `Today is ${moment().format("dddd")}`
+                    response: `Today is ${moment().format("dddd")}`
                 });
 
             case 'get_month':
                 return res.json({
                     type,
                     userInput: gemResult.userInput,
-                    respone: `The Month is ${moment().format("MMMM")}`
+                    response: `The Month is ${moment().format("MMMM")}`
                 });
 
             case 'google_search':
