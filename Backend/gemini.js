@@ -57,6 +57,7 @@ now your userInput- ${command}`;
             "DATA:",
             JSON.stringify(error.response?.data, null, 2)
         );
+        return null;
     }
 }
 

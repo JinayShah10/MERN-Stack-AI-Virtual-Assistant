@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState} from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import aiImg from "../assets/ai.gif"
@@ -8,8 +8,8 @@ const Home = () => {
   const { userData, serverUrl, setUserData, getGeminiResponse } = useContext(userDataContext)
   const navigate = useNavigate()
   const [listening, setListening] = useState(false);
-  const [userText,setUserText] = useState(null)
-  const [aiText,setAiText] = useState(null)
+  const [userText, setUserText] = useState(null)
+  const [aiText, setAiText] = useState(null)
   const isSpeakingRef = useRef(false);
   const recognitionRef = useRef(null);
   const isRecognizingRef = useRef(false)
@@ -27,32 +27,41 @@ const Home = () => {
     }
   }
 
-  const startRecognition = ()=>{
-    try{
+  const startRecognition = () => {
+    try {
       recognitionRef.current?.start()
       setListening(true)
     }
-    catch(error){
-      if(!error.message.includes("start"))
-      {
-        console.log("Recognition Error",error)
+    catch (error) {
+      if (!error.message.includes("start")) {
+        console.log("Recognition Error", error)
       }
     }
   }
 
   const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "hi-IN";
+    utterance.lang = "en-US";
+    utterance.pitch = 1;
+    utterance.rate = 1;
+
     const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v=>v.lang === "hi-IN");
-    if(voice)
-    {
+
+    const voice =
+      voices.find(v => v.name === "Google US English") ||
+      voices.find(v => v.name.includes("Samantha")) ||
+      voices.find(v => v.name.includes("Microsoft Aria")) ||
+      voices.find(v => v.lang === "en-US") ||
+      voices.find(v => v.lang?.startsWith("en"));
+
+    if (voice) {
       utterance.voice = voice;
     }
-    isSpeakingRef.current=true;
 
-    utterance.onend= ()=>{
-      isSpeakingRef.current=false;
+    isSpeakingRef.current = true;
+
+    utterance.onend = () => {
+      isSpeakingRef.current = false;
       startRecognition();
     }
     synth.speak(utterance);
@@ -112,39 +121,36 @@ const Home = () => {
         }
       }
       catch (error) {
-        if(error.name!="InvalidStateError"){
-          console.log("Strt Error",error);
+        if (error.name != "InvalidStateError") {
+          console.log("Strt Error", error);
         }
       }
     }
 
-    recognition.onstart = ()=>{
-      isRecognizingRef.current=true;
+    recognition.onstart = () => {
+      isRecognizingRef.current = true;
       setListening(true);
     }
 
-    recognition.onend = ()=>{
-      setAiText("")
-      isRecognizingRef.current=false;
+    recognition.onend = () => {
+      isRecognizingRef.current = false;
       setListening(false);
     }
 
-    if(!isSpeakingRef.current)
-    {
-      setTimeout(()=>{
+    if (!isSpeakingRef.current) {
+      setTimeout(() => {
         safeRecognition()
-      },1000);
+      }, 1000);
     }
 
-    recognition.onerror = (event)=>{
-      console.warn("Recognition Error",event.error);
-      isRecognizingRef.current=false;
+    recognition.onerror = (event) => {
+      console.warn("Recognition Error", event.error);
+      isRecognizingRef.current = false;
       setListening(false);
-      if(event.error!='aborted' && !isSpeakingRef.current)
-      {
-        setTimeout(()=>{
+      if (event.error != 'aborted' && !isSpeakingRef.current) {
+        setTimeout(() => {
           safeRecognition()
-        },1000)
+        }, 1000)
       }
     }
 
@@ -166,19 +172,18 @@ const Home = () => {
       }
     }
 
-    const fallback = setInterval(()=>{
-      if(!isSpeakingRef.current && !isRecognizingRef.current)
-      {
+    const fallback = setInterval(() => {
+      if (!isSpeakingRef.current && !isRecognizingRef.current) {
         safeRecognition();
       }
-    },10000)
+    }, 10000)
 
     safeRecognition();
 
-    return ()=>{
+    return () => {
       recognition.stop();
       setListening(false);
-      isRecognizingRef.current=false;
+      isRecognizingRef.current = false;
       clearInterval(fallback)
     }
 
@@ -197,10 +202,10 @@ const Home = () => {
 
       <h1 className='text-white text-[30px] font-semibold'>{userData?.assistantName}</h1>
 
-      {!aiText && <img src={userImg} alt="" className='w-50'/>}
-      {aiText && <img src={aiImg} alt="" className='w-50'/>}
+      {!aiText && <img src={userImg} alt="" className='w-50' />}
+      {aiText && <img src={aiImg} alt="" className='w-50' />}
 
-      <h2 className='text-white text-[18px] font-semibold text-wrap'>{userText?userText:aiText?aiText:null}</h2>
+      <h2 className='text-white text-[18px] font-semibold text-wrap'>{userText ? userText : aiText ? aiText : null}</h2>
 
     </div>
   )
