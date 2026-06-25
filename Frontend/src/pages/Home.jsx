@@ -3,6 +3,7 @@ import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import aiImg from "../assets/ai.gif"
 import userImg from "../assets/user.gif"
+import { HiMenu, HiX } from "react-icons/hi"
 
 const Home = () => {
   const { userData, serverUrl, setUserData, getGeminiResponse } = useContext(userDataContext)
@@ -10,6 +11,7 @@ const Home = () => {
   const [listening, setListening] = useState(false);
   const [userText, setUserText] = useState(null)
   const [aiText, setAiText] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const isSpeakingRef = useRef(false);
   const recognitionRef = useRef(null);
   const isRecognizingRef = useRef(false)
@@ -195,22 +197,46 @@ const Home = () => {
   }, [])
 
   return (
-    <div className='w-full h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col gap-5 relative'>
+    <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col gap-5 relative overflow-hidden px-4 py-8'>
 
-      <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400 absolute top-5 right-5 px-5 py-2.5 cursor-pointer' onClick={() => { navigate("/customize") }}>Customize Your Assistant</button>
+      {/* Desktop buttons */}
+      <div className='hidden sm:flex flex-col gap-4 absolute top-5 right-5'>
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-5 py-2.5 cursor-pointer' onClick={() => { navigate("/customize") }}>Customize Your Assistant</button>
 
-      <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400 absolute top-25 right-5 cursor-pointer' onClick={handleLogOut}>LogOut</button>
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 cursor-pointer' onClick={handleLogOut}>LogOut</button>
+      </div>
 
-      <div className='w-75 h-100 flex justify-center items-center overflow-hidden rounded-2xl border-3 border-blue-400 shadow-2xl shadow-blue-400'>
+      {/* Mobile hamburger button */}
+      <button
+        className='sm:hidden absolute top-5 right-5 z-20 w-12 h-12 flex items-center justify-center bg-white rounded-full text-black cursor-pointer shadow-lg'
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        {menuOpen ? <HiX className='w-6 h-6' /> : <HiMenu className='w-6 h-6' />}
+      </button>
+
+      {/* Mobile sliding menu */}
+      <div className={`sm:hidden fixed top-0 right-0 h-full w-64 bg-[#020220] border-l border-[#0000ff66] shadow-2xl shadow-black z-10 flex flex-col items-center justify-center gap-6 transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
+
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-5 py-2.5 cursor-pointer' onClick={() => { setMenuOpen(false); navigate("/customize") }}>Customize Your Assistant</button>
+
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 cursor-pointer' onClick={() => { setMenuOpen(false); handleLogOut() }}>LogOut</button>
+      </div>
+
+      {/* Overlay behind sliding menu */}
+      {menuOpen && (
+        <div className='sm:hidden fixed inset-0 bg-black/50 z-0' onClick={() => setMenuOpen(false)}></div>
+      )}
+
+      <div className='w-56 h-80 sm:w-64 sm:h-90 md:w-75 md:h-100 flex justify-center items-center overflow-hidden rounded-2xl border-3 border-blue-400 shadow-2xl shadow-blue-400'>
         <img src={userData?.assistantImage} className='h-full object-cover object-top ' />
       </div>
 
-      <h1 className='text-white text-[30px] font-semibold'>{userData?.assistantName}</h1>
+      <h1 className='text-white text-[22px] sm:text-[26px] md:text-[30px] font-semibold text-center'>{userData?.assistantName}</h1>
 
-      {!aiText && <img src={userImg} alt="" className='w-50' />}
-      {aiText && <img src={aiImg} alt="" className='w-50' />}
+      {!aiText && <img src={userImg} alt="" className='w-40 sm:w-44 md:w-50' />}
+      {aiText && <img src={aiImg} alt="" className='w-40 sm:w-44 md:w-50' />}
 
-      <h2 className='text-white text-[18px] font-semibold text-wrap'>{userText ? userText : aiText ? aiText : null}</h2>
+      <h2 className='text-white text-[16px] sm:text-[18px] font-semibold text-wrap text-center px-4'>{userText ? userText : aiText ? aiText : null}</h2>
 
     </div>
   )

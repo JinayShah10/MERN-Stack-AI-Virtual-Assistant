@@ -35,29 +35,29 @@ const SignUp = () => {
     }
   }
   return (
-    <div className='w-full h-screen bg-cover flex justify-center items-center' style={{ backgroundImage: `url(${bg})` }}>
+    <div className='w-full min-h-screen bg-cover bg-center flex justify-center items-center px-4 py-8' style={{ backgroundImage: `url(${bg})` }}>
 
-      <form className='w-[90%] h-175 max-w-150 bg-[#00000090] backdrop-blur shadow-lg shadow-black flex flex-col items-center justify-center gap-5 px-7.5 py-7.5 rounded-4xl' onSubmit={handleSignUp}>
+      <form className='w-full sm:w-[90%] h-auto max-w-150 bg-[#00000090] backdrop-blur shadow-lg shadow-black flex flex-col items-center justify-center gap-4 sm:gap-5 px-5 sm:px-7.5 py-8 sm:py-7.5 rounded-3xl sm:rounded-4xl' onSubmit={handleSignUp}>
 
-        <h1 className='text-white text-[36px] font-semibold mb-7.5'>Register To Your <span className='text-blue-400'>Virtual Assistant</span></h1>
+        <h1 className='text-white text-[26px] sm:text-[30px] md:text-[36px] text-center font-semibold mb-4 sm:mb-7.5'>Register To Your <span className='text-blue-400'>Virtual Assistant</span></h1>
 
-        <input type="text" placeholder='Enter your name' className='w-full h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[18px]' required onChange={(e) => { setName(e.target.value) }} value={name} />
+        <input type="text" placeholder='Enter your name' className='w-full h-13 sm:h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[16px] sm:text-[18px]' required onChange={(e) => { setName(e.target.value) }} value={name} />
 
-        <input type="email" placeholder='Enter your email' className='w-full h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[18px]' required onChange={(e) => { setEmail(e.target.value) }} value={email} />
+        <input type="email" placeholder='Enter your email' className='w-full h-13 sm:h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[16px] sm:text-[18px]' required onChange={(e) => { setEmail(e.target.value) }} value={email} />
 
-        <div className='w-full h-15 border-2 border-white bg-transparent text-white rounded-full text-[18px] relative'>
+        <div className='w-full h-13 sm:h-15 border-2 border-white bg-transparent text-white rounded-full text-[16px] sm:text-[18px] relative'>
           <input type={showPassword ? "text" : "password"} placeholder="Enter your password" className='w-full h-full rounded-full outline-none bg-transparent placeholder-grey-300 px-5 py-2.5' required onChange={(e) => { setPassword(e.target.value) }} value={password} />
 
-          {!showPassword && <IoEye className='absolute top-4 right-5 text-[white] w-6.25 h-6.25 cursor-pointer' onClick={() => { setShowPassword(true) }} />}
+          {!showPassword && <IoEye className='absolute top-1/2 -translate-y-1/2 right-5 text-[white] w-5.5 h-5.5 sm:w-6.25 sm:h-6.25 cursor-pointer' onClick={() => { setShowPassword(true) }} />}
 
-          {showPassword && <IoEyeOff className='absolute top-4 right-5 text-[white] w-6.25 h-6.25 cursor-pointer' onClick={() => { setShowPassword(false) }} />}
+          {showPassword && <IoEyeOff className='absolute top-1/2 -translate-y-1/2 right-5 text-[white] w-5.5 h-5.5 sm:w-6.25 sm:h-6.25 cursor-pointer' onClick={() => { setShowPassword(false) }} />}
         </div>
 
-        {error.length > 0 && <p className='text-red-500 text-[17px]'>*{error}</p>}
+        {error.length > 0 && <p className='text-red-500 text-[15px] sm:text-[17px] text-center'>*{error}</p>}
 
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-7.5 hover:bg-blue-400' disabled={loading} >{loading?"Loading..":"Sign Up"}</button>
+        <button className='min-w-37.5 h-13 sm:h-15 bg-white rounded-full text-black font-semibold text-[17px] sm:text-[19px] mt-4 sm:mt-7.5 hover:bg-blue-400' disabled={loading} >{loading?"Loading..":"Sign Up"}</button>
 
-        <p className='text-[white] text-[18px] cursor-pointer' onClick={() => { navigate("/signin") }}>Already have an account? <span className='text-blue-400'>Sign In</span></p>
+        <p className='text-[white] text-[16px] sm:text-[18px] cursor-pointer text-center' onClick={() => { navigate("/signin") }}>Already have an account? <span className='text-blue-400'>Sign In</span></p>
       </form>
     </div>
   )

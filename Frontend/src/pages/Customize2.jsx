@@ -37,15 +37,15 @@ const Customize2 = () => {
     }
 
     return (
-        <div className='w-full h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col p-5 relative'>
+        <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col p-4 sm:p-5 relative'>
 
-            <MdKeyboardBackspace className="absolute top-7.5 left-7.5 text-white w-8 h-8 cursor-pointer" onClick={()=>{navigate("/customize")}}/>
+            <MdKeyboardBackspace className="absolute top-5 left-5 sm:top-7.5 sm:left-7.5 text-white w-7 h-7 sm:w-8 sm:h-8 cursor-pointer" onClick={()=>{navigate("/customize")}}/>
 
-            <h1 className='text-white text-[30px] text-center font-semibold mb-10'>Enter Your <span className=' text-blue-400 text-[30px] font-semibold'>AI Assistant's Name</span></h1>
+            <h1 className='text-white text-[22px] sm:text-[26px] md:text-[30px] text-center font-semibold mb-6 sm:mb-10 mt-10 sm:mt-0 px-2'>Enter Your <span className=' text-blue-400 text-[22px] sm:text-[26px] md:text-[30px] font-semibold'>AI Assistant's Name</span></h1>
 
-            <input type="text" placeholder='Enter name' className='w-full max-w-150 h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[18px]' required onChange={(e) => { setAssistantName(e.target.value) }} value={assistantName} />
+            <input type="text" placeholder='Enter name' className='w-full max-w-150 h-13 sm:h-15 outline-none border-2 border-white bg-transparent text-white placeholder-grey-300 px-5 py-2.5 rounded-full text-[16px] sm:text-[18px]' required onChange={(e) => { setAssistantName(e.target.value) }} value={assistantName} />
 
-            {assistantName && <button className='min-w-75 h-15 bg-white rounded-full text-black font-semibold text-[19px] mt-15 hover:bg-blue-400 cursor-pointer' disabled={loading} onClick={() => {
+            {assistantName && <button className='w-full sm:w-auto sm:min-w-75 h-13 sm:h-15 bg-white rounded-full text-black font-semibold text-[17px] sm:text-[19px] mt-8 sm:mt-15 hover:bg-blue-400 cursor-pointer max-w-150' disabled={loading} onClick={() => {
                 navigate("/customize2")
                 handleUpdateAssistant()
             }}>{!loading?"Create AI Assistant":"Loading..."}</button>}
