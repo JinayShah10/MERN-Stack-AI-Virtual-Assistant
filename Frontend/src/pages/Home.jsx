@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import aiImg from "../assets/ai.gif"
 import userImg from "../assets/user.gif"
 import { HiMenu, HiX } from "react-icons/hi"
+import axios from "axios"
 
 const Home = () => {
   const { userData, serverUrl, setUserData, getGeminiResponse } = useContext(userDataContext)
@@ -197,13 +198,13 @@ const Home = () => {
   }, [])
 
   return (
-    <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col gap-5 relative overflow-hidden px-4 py-8'>
+    <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex justify-center items-center flex-col gap-5 relative overflow-hidden px-4 pt-24 pb-8 sm:pt-8'>
 
       {/* Desktop buttons */}
       <div className='hidden sm:flex flex-col gap-4 absolute top-5 right-5'>
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-5 py-2.5 cursor-pointer' onClick={() => { navigate("/customize") }}>Customize Your Assistant</button>
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-6 py-2.5 cursor-pointer flex items-center justify-center text-center' onClick={() => { navigate("/customize") }}>Customize Your Assistant</button>
 
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 cursor-pointer' onClick={handleLogOut}>LogOut</button>
+        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-6 py-2.5 cursor-pointer flex items-center justify-center text-center' onClick={handleLogOut}>LogOut</button>
       </div>
 
       {/* Mobile hamburger button */}
@@ -215,11 +216,11 @@ const Home = () => {
       </button>
 
       {/* Mobile sliding menu */}
-      <div className={`sm:hidden fixed top-0 right-0 h-full w-64 bg-[#020220] border-l border-[#0000ff66] shadow-2xl shadow-black z-10 flex flex-col items-center justify-center gap-6 transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
+      <div className={`sm:hidden fixed top-0 right-0 h-full w-64 bg-[#020220] border-l border-[#0000ff66] shadow-2xl shadow-black z-10 flex flex-col items-center justify-center gap-6 px-6 transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
 
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 px-5 py-2.5 cursor-pointer' onClick={() => { setMenuOpen(false); navigate("/customize") }}>Customize Your Assistant</button>
+        <button className='w-full min-h-15 bg-white rounded-full text-black font-semibold text-[17px] hover:bg-blue-400 px-6 py-3 cursor-pointer flex items-center justify-center text-center leading-tight' onClick={() => { setMenuOpen(false); navigate("/customize") }}>Customize Your Assistant</button>
 
-        <button className='min-w-37.5 h-15 bg-white rounded-full text-black font-semibold text-[19px] hover:bg-blue-400 cursor-pointer' onClick={() => { setMenuOpen(false); handleLogOut() }}>LogOut</button>
+        <button className='w-full min-h-15 bg-white rounded-full text-black font-semibold text-[17px] hover:bg-blue-400 px-6 py-3 cursor-pointer flex items-center justify-center text-center leading-tight' onClick={() => { setMenuOpen(false); handleLogOut() }}>LogOut</button>
       </div>
 
       {/* Overlay behind sliding menu */}
