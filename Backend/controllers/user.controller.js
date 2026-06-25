@@ -52,8 +52,6 @@ export const askToAssistant = async (req, res) => {
         const userName = user.name;
         const assistantName = user.assistantName;
 
-        // Try to resolve simple, deterministic commands locally first so we
-        // don't spend a Gemini call on something that doesn't need AI.
         const text = command.toLowerCase().trim();
 
         const timeRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?time\b|current\s+time\b|time\s+(?:is\s+it|right\s+now)\b|tell\s+me\s+the\s+time\b)/;
@@ -61,10 +59,6 @@ export const askToAssistant = async (req, res) => {
         const dayRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?day\s+(?:is\s+)?(?:it|today)\b|which\s+day\s+(?:is\s+)?(?:it|today)\b|today'?s?\s+day\b|current\s+day\b|tell\s+me\s+the\s+day\b)/;
         const monthRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?month\b|current\s+month\b|which\s+month\b|tell\s+me\s+the\s+month\b)/;
 
-        // Strips trigger words (app names, verbs like "search"/"play", the
-        // assistant's own name, filler words) out of the raw command so what's
-        // left is just the actual search term — e.g. "Jarvis search Messi on
-        // google" -> "Messi".
         const extractQuery = (raw, removeWords) => {
             let q = raw;
             removeWords.forEach(w => {
