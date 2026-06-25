@@ -52,6 +52,8 @@ export const askToAssistant = async (req, res) => {
         const userName = user.name;
         const assistantName = user.assistantName;
 
+        // Try to resolve simple, deterministic commands locally first so we
+        // don't spend a Gemini call on something that doesn't need AI.
         const text = command.toLowerCase().trim();
 
         const timeRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?time\b|current\s+time\b|time\s+(?:is\s+it|right\s+now)\b|tell\s+me\s+the\s+time\b)/;
@@ -59,11 +61,32 @@ export const askToAssistant = async (req, res) => {
         const dayRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?day\s+(?:is\s+)?(?:it|today)\b|which\s+day\s+(?:is\s+)?(?:it|today)\b|today'?s?\s+day\b|current\s+day\b|tell\s+me\s+the\s+day\b)/;
         const monthRegex = /\b(what(?:'s|s| is)?\s+(?:the\s+)?month\b|current\s+month\b|which\s+month\b|tell\s+me\s+the\s+month\b)/;
 
+        // Strips trigger words (app names, verbs like "search"/"play", the
+        // assistant's own name, filler words) out of the raw command so what's
+        // left is just the actual search term — e.g. "Jarvis search Messi on
+        // google" -> "Messi".
+        const extractQuery = (raw, removeWords) => {
+            let q = raw;
+            removeWords.forEach(w => {
+                q = q.replace(new RegExp(`\\b${w}\\b`, "gi"), "");
+            });
+            return q.replace(/\s+/g, " ").trim();
+        };
+
         let type = null;
         if (timeRegex.test(text)) type = "get_time";
         else if (dateRegex.test(text)) type = "get_date";
         else if (dayRegex.test(text)) type = "get_day";
         else if (monthRegex.test(text)) type = "get_month";
+        else if (/\bcalculator\b/.test(text)) type = "calculator_open";
+        else if (/\binstagram\b/.test(text)) type = "instagram_open";
+        else if (/\bfacebook\b/.test(text)) type = "facebook_open";
+        else if (/\bweather\b/.test(text)) type = "weather_show";
+        else if (/\byoutube\b/.test(text) && /\bplay\b/.test(text)) type = "youtube_play";
+        else if (/\byoutube\b/.test(text) && /\b(search|find)\b/.test(text)) type = "youtube_search";
+        else if (/\bgoogle\b/.test(text) && /\b(search|find)\b/.test(text)) type = "google_search";
+        else if (/\byoutube\b/.test(text) && /\bopen\b/.test(text)) type = "youtube_open";
+        else if (/\bgoogle\b/.test(text) && /\bopen\b/.test(text)) type = "google_open";
 
         if (type) {
             switch (type) {
@@ -93,6 +116,75 @@ export const askToAssistant = async (req, res) => {
                         type,
                         userInput: command,
                         response: `The Month is ${moment().format("MMMM")}`
+                    });
+
+                case 'calculator_open':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Opening calculator for you."
+                    });
+
+                case 'instagram_open':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Opening Instagram for you."
+                    });
+
+                case 'facebook_open':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Opening Facebook for you."
+                    });
+
+                case 'weather_show':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Here's the weather for you."
+                    });
+
+                case 'youtube_play': {
+                    const query = extractQuery(command, [assistantName, "play", "on", "youtube", "the", "please", "video", "song", "for", "and"]);
+                    return res.json({
+                        type,
+                        userInput: query,
+                        response: `Playing ${query} on YouTube.`
+                    });
+                }
+
+                case 'youtube_search': {
+                    const query = extractQuery(command, [assistantName, "search", "find", "look", "up", "on", "youtube", "the", "please", "for", "and"]);
+                    return res.json({
+                        type,
+                        userInput: query,
+                        response: `Searching ${query} on YouTube.`
+                    });
+                }
+
+                case 'google_search': {
+                    const query = extractQuery(command, [assistantName, "search", "find", "look", "up", "on", "google", "open", "the", "please", "for", "and"]);
+                    return res.json({
+                        type,
+                        userInput: query,
+                        response: `Searching ${query} on Google.`
+                    });
+                }
+
+                case 'youtube_open':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Opening YouTube for you."
+                    });
+
+                case 'google_open':
+                    return res.json({
+                        type,
+                        userInput: command,
+                        response: "Opening Google for you."
                     });
             }
         }
@@ -151,6 +243,8 @@ export const askToAssistant = async (req, res) => {
             case 'google_search':
             case 'youtube_search':
             case 'youtube_play':
+            case 'youtube_open':
+            case 'google_open':
             case 'general':
             case "calculator_open":
             case "instagram_open":

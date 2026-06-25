@@ -39,7 +39,7 @@ const Home = () => {
     }
   }
 
- const speak = (text) => {
+  const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     utterance.pitch = 0.85;
@@ -56,9 +56,9 @@ const Home = () => {
     if (voice) {
       utterance.voice = voice;
     }
-    isSpeakingRef.current=true;
-    utterance.onend= ()=>{
-      isSpeakingRef.current=false;
+    isSpeakingRef.current = true;
+    utterance.onend = () => {
+      isSpeakingRef.current = false;
       startRecognition();
     }
     synth.speak(utterance);
@@ -72,6 +72,10 @@ const Home = () => {
     if (type === "google_search") {
       const query = encodeURIComponent(userInput);
       window.open(`https://www.google.com/search?q=${query}`, `_blank`);
+    }
+
+    if (type === "google_open") {
+      window.open(`https://www.google.com/`, `_blank`);
     }
 
     if (type === "calculator_open") {
@@ -97,6 +101,10 @@ const Home = () => {
     if (type === "youtube_search" || type === "youtube_play") {
       const query = encodeURIComponent(userInput);
       window.open(`https://www.youtube.com/results?search_query=${query}`, `_blank`);
+    }
+
+    if (type === "youtube_open") {
+      window.open(`https://www.youtube.com/`, `_blank`);
     }
 
 
