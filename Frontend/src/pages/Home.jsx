@@ -39,29 +39,26 @@ const Home = () => {
     }
   }
 
-  const speak = (text) => {
+ const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
-    utterance.pitch = 1;
+    utterance.pitch = 0.85;
     utterance.rate = 1;
-
     const voices = window.speechSynthesis.getVoices();
-
     const voice =
-      voices.find(v => v.name === "Google US English") ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.name.includes("Microsoft Aria")) ||
+      voices.find(v => v.name === "Google UK English Male") ||
+      voices.find(v => v.name.includes("Microsoft David")) ||
+      voices.find(v => v.name.includes("Microsoft Guy")) ||
+      voices.find(v => v.name.includes("Daniel")) ||
+      voices.find(v => v.name.includes("Microsoft Ryan")) ||
       voices.find(v => v.lang === "en-US") ||
       voices.find(v => v.lang?.startsWith("en"));
-
     if (voice) {
       utterance.voice = voice;
     }
-
-    isSpeakingRef.current = true;
-
-    utterance.onend = () => {
-      isSpeakingRef.current = false;
+    isSpeakingRef.current=true;
+    utterance.onend= ()=>{
+      isSpeakingRef.current=false;
       startRecognition();
     }
     synth.speak(utterance);
