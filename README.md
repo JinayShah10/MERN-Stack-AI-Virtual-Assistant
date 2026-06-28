@@ -10,9 +10,13 @@ This is a voice enabled AI virtual assistant that lets users talk to a personali
 
 The backend handles authentication, user data, and assistant customization, while the frontend manages voice recognition, text to speech, and the overall user interface. Common commands like checking the time, date, or day are handled locally for speed, and anything more open ended is passed to Gemini for a response.
 
-## Deployment Link
+## Live Demo
 
-[Add your live deployment link here]
+The application is fully deployed, with both the frontend and backend hosted on Render, and can be accessed at:
+
+https://virtual-assistant-frontend-tqfo.onrender.com
+
+Create an account, personalize your assistant, and interact with it using voice commands directly from your browser.
 
 ## Preview
 
@@ -35,6 +39,17 @@ A quick look at the assistant in action.
 - A visual indicator that shows when the assistant is listening
 - Fully responsive layout that works across desktop and mobile screen sizes
 
+## Tech Stack
+
+- Frontend: React.js, Vite, Tailwind CSS
+- Backend: Node.js, Express.js
+- Database: MongoDB Atlas
+- Authentication: JWT, bcrypt.js
+- AI Integration: Google Gemini API
+- Cloud Storage: Cloudinary
+- Browser APIs: Speech Recognition API, Speech Synthesis API
+- Deployment: Render (Frontend and Backend)
+
 ## How to Use
 
 1. Open the deployed link or run the project locally
@@ -53,7 +68,7 @@ This project uses the free tier of the Gemini API, so responses may occasionally
 
 ## Connect with Me
 
-LinkedIn: www.linkedin.com/in/jinayshah2005
+LinkedIn: https://www.linkedin.com/in/jinayshah2005
 
 Email: jinayshah1405@gmail.com
 
