@@ -1,13 +1,13 @@
 import { React, useState } from 'react'
 import { useContext } from 'react'
 import Card from '../components/Card'
-import image1 from "../assets/image1.png"
-import image2 from "../assets/image2.jpg"
-import image3 from "../assets/authBg.png"
-import image4 from "../assets/image4.png"
-import image5 from "../assets/image5.png"
-import image6 from "../assets/image6.jpeg"
-import image7 from "../assets/image7.jpeg"
+import image1 from "/images/image1.png"
+import image2 from "/images/image2.jpg"
+import image3 from "/images/authBg.png"
+import image4 from "/images/image4.png"
+import image5 from "/images/image5.png"
+import image6 from "/images/image6.jpeg"
+import image7 from "/images/image7.jpeg"
 import { RiImageAddLine } from "react-icons/ri"
 import {MdKeyboardBackspace} from "react-icons/md";
 import { useRef } from 'react'
