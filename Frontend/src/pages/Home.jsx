@@ -219,6 +219,8 @@ const Home = () => {
 
   }, [])
 
+  console.log("Assistant Image:", userData?.assistantImage);
+
   return (
     <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex flex-col sm:flex-row relative overflow-hidden'>
 
