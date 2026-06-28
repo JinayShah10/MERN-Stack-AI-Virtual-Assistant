@@ -256,7 +256,7 @@ const Home = () => {
               [...userData.history].reverse().map((item, index) => (
                 <div
                   key={index}
-                  className='text-white text-[14px] bg-white/10 border border-white/10 rounded-xl px-3 py-2 break-words backdrop-blur-sm'
+                  className='text-white text-[14px] bg-white/10 border border-white/10 rounded-xl px-3 py-2 wrap-break-words backdrop-blur-sm'
                 >
                   {item}
                 </div>
@@ -303,7 +303,7 @@ const Home = () => {
               [...userData.history].reverse().map((item, index) => (
                 <div
                   key={index}
-                  className='text-white text-[13px] bg-white/10 border border-white/10 rounded-xl px-3 py-2 break-words backdrop-blur-sm'
+                  className='text-white text-[13px] bg-white/10 border border-white/10 rounded-xl px-3 py-2 wrap-break-words backdrop-blur-sm'
                 >
                   {item}
                 </div>
