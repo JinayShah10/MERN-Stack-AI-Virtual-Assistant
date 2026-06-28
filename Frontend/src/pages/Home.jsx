@@ -222,7 +222,41 @@ const Home = () => {
   return (
     <div className='w-full min-h-screen bg-linear-to-t from-black to-[#030353] flex flex-col sm:flex-row relative overflow-hidden'>
 
-      <div className='hidden sm:flex sm:flex-col sm:w-56 md:w-64 lg:w-72 shrink-0 gap-4 px-4 pt-8 pb-8 sm:h-screen sm:sticky sm:top-0'>
+      <style>{`
+        @keyframes techGridMove {
+          0% { background-position: 0 0; }
+          100% { background-position: 60px 60px; }
+        }
+        @keyframes techBlobFloatOne {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(40px, -30px) scale(1.1); }
+        }
+        @keyframes techBlobFloatTwo {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-50px, 40px) scale(1.15); }
+        }
+        .tech-bg-grid {
+          background-image:
+            linear-gradient(to right, rgba(80, 130, 255, 0.12) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(80, 130, 255, 0.12) 1px, transparent 1px);
+          background-size: 60px 60px;
+          animation: techGridMove 12s linear infinite;
+        }
+        .tech-bg-blob-one {
+          animation: techBlobFloatOne 10s ease-in-out infinite;
+        }
+        .tech-bg-blob-two {
+          animation: techBlobFloatTwo 13s ease-in-out infinite;
+        }
+      `}</style>
+
+      <div className='absolute inset-0 z-0 pointer-events-none overflow-hidden'>
+        <div className='tech-bg-grid absolute inset-0'></div>
+        <div className='tech-bg-blob-one absolute top-[-10%] left-[-10%] w-72 h-72 sm:w-96 sm:h-96 bg-blue-500/20 rounded-full blur-3xl'></div>
+        <div className='tech-bg-blob-two absolute bottom-[-10%] right-[-10%] w-72 h-72 sm:w-96 sm:h-96 bg-indigo-500/20 rounded-full blur-3xl'></div>
+      </div>
+
+      <div className='hidden sm:flex sm:flex-col sm:w-56 md:w-64 lg:w-72 shrink-0 gap-4 px-4 pt-8 pb-8 sm:h-screen sm:sticky sm:top-0 relative z-10'>
 
         <div className='flex bg-white/10 backdrop-blur-xl border border-white/20 rounded-full p-1 gap-1 shrink-0'>
           <button
@@ -313,7 +347,7 @@ const Home = () => {
         <div className='sm:hidden fixed inset-0 bg-black/50 z-0' onClick={() => setMenuOpen(false)}></div>
       )}
 
-      <div className='flex-1 min-w-0 flex justify-center items-center flex-col gap-5 px-4 pt-24 pb-8 sm:pt-8'>
+      <div className='flex-1 min-w-0 flex justify-center items-center flex-col gap-5 px-4 pt-24 pb-8 sm:pt-8 relative z-10'>
 
         <div className='w-56 h-80 sm:w-64 sm:h-90 md:w-75 md:h-100 flex justify-center items-center overflow-hidden rounded-2xl border-3 border-blue-400 shadow-2xl shadow-blue-400'>
           <img src={userData?.assistantImage} className='h-full object-cover object-top ' />
