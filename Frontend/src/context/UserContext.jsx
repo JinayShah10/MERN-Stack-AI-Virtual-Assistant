@@ -11,7 +11,7 @@ const UserContext = ({ children }) => {
   const [backendImage,setBackendImage] = useState(null);
   const [selectedImage,setSelectedImage] = useState(null);
 
-  const serverUrl = "http://localhost:8000"
+  const serverUrl = "https://virtual-assistant-backend-uoy6.onrender.com"
 
   const handleCurrentUser = async () => {
     try {
