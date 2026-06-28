@@ -88,28 +88,28 @@ export const askToAssistant = async (req, res) => {
                     return res.json({
                         type,
                         userInput: command,
-                        response: `Current Date is ${moment().format("DD-MM-YYYY")}`
+                        response: `Current Date is ${moment().utcOffset("+05:30").format("DD-MM-YYYY")}`
                     });
 
                 case 'get_time':
                     return res.json({
                         type,
                         userInput: command,
-                        response: `Current Time is ${moment().format("hh:mm A")}`
+                        response: `Current Time is ${moment().utcOffset("+05:30").format("hh:mm A")}`
                     });
 
                 case 'get_day':
                     return res.json({
                         type,
                         userInput: command,
-                        response: `Today is ${moment().format("dddd")}`
+                        response: `Today is ${moment().utcOffset("+05:30").format("dddd")}`
                     });
 
                 case 'get_month':
                     return res.json({
                         type,
                         userInput: command,
-                        response: `The Month is ${moment().format("MMMM")}`
+                        response: `The Month is ${moment().utcOffset("+05:30").format("MMMM")}`
                     });
 
                 case 'calculator_open':
